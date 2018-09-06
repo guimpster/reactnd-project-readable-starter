@@ -9,7 +9,7 @@ const CategoryItem = ({ category }) => (
 
 CategoryItem.propTypes = {
   category: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    key: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
   }).isRequired

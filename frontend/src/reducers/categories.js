@@ -1,36 +1,16 @@
-const initialCategories = [{name: "teste"}]
+import {
+    GET_CATEGORIES
+  } from '../constants/ActionTypes'
 
-export const getCategories = (categories = []) => 
-    categories.map(category => ({ ...category, url: `/${category.path}`}))
+const initialState = []
 
-
-
-const categories = (state = initialCategories, action) => {
-//const { day, recipe, meal } = action
-
-// switch (action.type) {
-//   case ADD_RECIPE:
-//     return {
-//       ...state,
-//       [day]: {
-//         ...state[day],
-//         [meal]: recipe.label
-//       }
-//     };
-//   case REMOVE_FROM_CALENDAR:
-//     return {
-//       ...state,
-//       [day]: {
-//         ...state[day],
-//         [meal]: null
-//       }
-//     };
-//   default:
-//     return state
-// }
-
-return state
+const categories = (state = initialState, action) => {
+    switch(action.type) {
+        case GET_CATEGORIES:
+            return (action.categories || []).map((category, idx) => ({ key: idx, ...category }))
+        default:
+            return state
+    }
 }
 
 export default categories
-  
