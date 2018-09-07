@@ -3,6 +3,11 @@ import {
     SELECT_CATEGORY
   } from '../constants/ActionTypes'
 
+const allCategories = {
+    name: "all categories",
+    path: ""
+}
+
 const initialState = {
     list: [],
     selectedCategory: {}
@@ -13,7 +18,7 @@ const categories = (state = initialState, action) => {
         case GET_CATEGORIES:
             return {
                 ...state,
-                list: (action.categories || []).map((category, idx) => ({ key: idx, ...category }))
+                list: [allCategories].concat(action.categories).map((category, idx) => ({ key: idx, ...category }))
             }
         case SELECT_CATEGORY:
             return {

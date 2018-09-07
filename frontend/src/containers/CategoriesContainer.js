@@ -11,7 +11,7 @@ class CategoriesContainer extends Component {
 
     getAllCategories()
       .then(() => getAllPosts())
-      .then(() => selectCategory(""))
+      .then(() => selectCategory("all categories"))
   }
 
   render() {
@@ -20,7 +20,6 @@ class CategoriesContainer extends Component {
     return (
       <div>
         <div className="menu">
-          <Link className="all-categories" to="/" onClick={() => selectCategory()}>All Categories</Link>
           {categories.map((category, idx) => (
             <p key={idx}>
               <Link className="close-search" to={category.path} onClick={() => selectCategory(category.name)}>{category.name}</Link>

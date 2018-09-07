@@ -22,7 +22,7 @@ const post = (state = initialState, action) => {
         case SELECT_CATEGORY:
             return {
                 ...state,
-                selectedPosts: !action.categoryName ? state.list.slice() :
+                selectedPosts: action.categoryName === "all categories" ? state.list.slice() :
                                     state.list.filter(post => post.category === action.categoryName)
 
             }

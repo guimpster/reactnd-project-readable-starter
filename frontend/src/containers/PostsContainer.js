@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import Modal from 'react-modal'
 import * as R from 'ramda'
 //import { ArrowCircleRight } from 'react-icons/fa'
@@ -59,21 +59,22 @@ class PostContainer extends Component {
                     Add Post
                 </button>
 
-                {categories.map((category, idx) => (
-                    <Route key={idx} exact path={`/${category.path}`}> 
-                        <div className="posts">
-                            Path: {`/${category.path}`}
-                            Ordenar categoria {category.name} por 
-                                {/* <OrderButton prop="voteScore" text="Votes" onClick={getPosts}/> 
-                                <OrderButton prop="timestamp" text="Data" onClick={getPosts}/> */}
-                            <PostsList title={`${category.name} posts`}>
-                                {selectedPosts.map((post, idx) => (
-                                    <PostItem key={idx} post={post} removePost={this.removePost}/>
-                                ))}
-                            </PostsList>
-                        </div>
-                    </Route>
-                ))}
+                <Switch>
+                    {categories.map((category, idx) => (
+                        <Route key={idx} path={`/${category.path}`}> 
+                            <div className="posts">
+                                Ordenar por 
+                                    {/* <OrderButton prop="voteScore" text="Votes" onClick={getPosts}/> 
+                                    <OrderButton prop="timestamp" text="Data" onClick={getPosts}/> */}
+                                <PostsList title={`${category.name} posts`}>
+                                    {selectedPosts.map((post, idx) => (
+                                        <PostItem key={idx} post={post} removePost={this.removePost}/>
+                                    ))}
+                                </PostsList>
+                            </div>
+                        </Route>
+                    ))}
+                </Switch>
 
                 <Modal
                     className='modal'
