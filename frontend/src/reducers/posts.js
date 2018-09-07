@@ -27,11 +27,19 @@ const post = (state = initialState, action) => {
 
             }
         case CREATE_POST:
-            return state
+            return {
+                ...state,
+                list: [{...action.post, key: (state.list.length - 1)}].concat(state.list || []),
+                selectedPosts: [{...action.post, key: (state.list.length - 1)}].concat(state.selectedPosts || [])
+            }
         case UPDATE_POST:
             return state
         case DELETE_POST:
-            return state
+            return {
+                ...state,
+                list: (state.list || []).filter(post => post.id !== action.post.id),
+                selectedPosts: (state.selectedPosts || []).filter(post => post.id !== action.post.id),
+            }
         default:
             return state
     }

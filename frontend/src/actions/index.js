@@ -62,7 +62,7 @@ const createPostAction = post => ({
 })
 
 export const createPost = post => dispatch =>
-  api.createPost({...post, id: uid(), timestamp: Date.now()}).then(res => dispatch(createPostAction(post)))
+  api.createPost({...post, id: uid(), timestamp: Date.now()}).then(newPost => dispatch(createPostAction(newPost)))
 
 
 const getPostAction = post => ({
@@ -117,7 +117,7 @@ const createCommentAction = comment => ({
 })
 
 export const createComment = comment => dispatch => 
-  api.createComment(comment.parentId, comment).then(res => dispatch(createCommentAction(comment)))
+  api.createComment(comment.parentId, comment).then(newComment => dispatch(createCommentAction(newComment)))
 
 
 const getCommentAction = comment => ({
