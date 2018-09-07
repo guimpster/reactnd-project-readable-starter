@@ -4,17 +4,6 @@ import rootReducer from '../reducers'
 import thunk from 'redux-thunk'
 import DevTools from '../containers/DevTools'
 
-import { getAllCategories } from '../actions'
-
-// const logger = store => next => action => {
-//   console.group(action.type)
-//   console.info("dispatching", action)
-//   let result = next(action)
-//   console.log("next state", store.getState())
-//   console.groupEnd(action.type)
-//   return result
-// };
-
 const configureStore = preloadedState => {
   const store = createStore(
     rootReducer,
@@ -24,8 +13,6 @@ const configureStore = preloadedState => {
       DevTools.instrument()
     )
   )
-
-  store.dispatch(getAllCategories())
 
   return store
 }

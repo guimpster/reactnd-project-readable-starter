@@ -1,20 +1,36 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { selectCategory, getAllPosts, getAllCategories } from '../actions'
 
-import CategoryItem from '../components/CategoryItem'
-import CategoriesList from '../components/CategoriesList'
+class CategoriesContainer extends Component {
 
-const CategoriesContainer = ({ categories }) => (
-  <CategoriesList title="Categories">
-    {categories.map(category =>
-      <CategoryItem
-        key={category.key}
-        category={category}
-        />
-    )}
-  </CategoriesList>
-)
+  componentDidMount() {
+    const { selectCategory, getAllCategories, getAllPosts } = this.props
+
+    getAllCategories()
+      .then(() => getAllPosts())
+      .then(() => selectCategory(""))
+  }
+
+  render() {
+    const { selectCategory, categories, /*selectedCategory*/ } = this.props
+
+    return (
+      <div>
+        <div className="menu">
+          <Link className="all-categories" to="/" onClick={() => selectCategory()}>All Categories</Link>
+          {categories.map((category, idx) => (
+            <p key={idx}>
+              <Link className="close-search" to={category.path} onClick={() => selectCategory(category.name)}>{category.name}</Link>
+            </p>        
+          ))}    
+        </div>
+      </div>
+    )
+  }
+}
 
 CategoriesContainer.propTypes = {
   categories: PropTypes.arrayOf(PropTypes.shape({
@@ -25,9 +41,17 @@ CategoriesContainer.propTypes = {
 }
 
 const mapStateToProps = state => ({
-  categories: state.categories
+  categories: state.categories.list,
+  selectedCategory: state.categories.selected
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  selectCategory: (categoryName) => dispatch(selectCategory(categoryName)),
+  getAllCategories: () => dispatch(getAllCategories()),
+  getAllPosts: () => dispatch(getAllPosts())
 })
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(CategoriesContainer)

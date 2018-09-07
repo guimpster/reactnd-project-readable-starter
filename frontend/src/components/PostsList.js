@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const CategoriesList = ({ title, children }) => (
+const PostsList = ({ title, children }) => (
   <div>
     <h3>{title}</h3>
     <div>{children}</div>
   </div>
 )
 
-CategoriesList.propTypes = {
+PostsList.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string.isRequired
 }
 
-export default CategoriesList
+export default PostsList
