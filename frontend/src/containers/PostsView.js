@@ -165,9 +165,7 @@ const mapStateToProps = state => ({
     categories: state.categories.list,
     selectedCategory: state.categories.selectedCategory,
     selectedPosts: state.posts.selectedPosts,
-    posts: state.posts.list,
-    selectedComments: state.comments.selectedComments,
-    comments: state.comments.list,    
+    posts: state.posts.list
 })
 
 const mapDispatchToProps = (dispatch) => ({

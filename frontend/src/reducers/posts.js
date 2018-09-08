@@ -1,4 +1,4 @@
-import * as R from 'ramda'
+import { sortBy, addKey, addToList } from './utils'
 
 import {
     GET_POSTS,
@@ -18,25 +18,18 @@ const initialState = {
     selectedPost: {}
 }
 
-const sortBy = ({ orderBy, direction, list}) => {
-    const sortOrder =  R.equals('desc', direction) ?
-        R.descend(R.prop(orderBy)) : R.ascend(R.prop(orderBy));
-
-    return R.sortWith([sortOrder], list)
-}
 const post = (state = initialState, action) => {
     switch(action.type) {
         case GET_POSTS:
             return {
                 ...state,
-                list: (action.posts || []).map((post, idx) => ({ key: idx, ...post }))
+                list: addKey(action.posts)
             }
         case SELECT_CATEGORY:
             return {
                 ...state,
                 selectedPosts: action.categoryName === "all categories" ? state.list.slice() :
                                     state.list.filter(post => post.category === action.categoryName)
-
             }
         case ORDER_POSTS_BY:
             console.log({...action, list: state.list })
@@ -53,8 +46,8 @@ const post = (state = initialState, action) => {
         case CREATE_POST:
             return {
                 ...state,
-                list: [{...action.post, key: (state.list.length - 1)}].concat(state.list || []),
-                selectedPosts: [{...action.post, key: (state.list.length - 1)}].concat(state.selectedPosts || [])
+                list: addToList(state.list, action.post),
+                selectedPosts: addToList(state.selectedPosts, action.post)
             }
         case UPDATE_POST:
             return {

@@ -1,3 +1,5 @@
+import { sortBy, addKey, addToList } from './utils'
+
 import {
     GET_COMMENTS,
     CREATE_COMMENT,
@@ -11,35 +13,37 @@ const initialState = {
     selectedComments: []
 }
 
+const sortByVoteScore = list => sortBy({ orderBy: "voteScore", direction: "desc", list })
+
 const comment = (state = initialState, action) => {
     switch(action.type) {
         case GET_COMMENTS:
             return {
                 ...state,
-                list: (action.comments || []).map((comment, idx) => ({ key: idx, ...comment }))
+                list: sortByVoteScore(addKey(action.comments))
             }
         case SELECT_POST:
             return {
                 ...state,
-                selectedComments: state.list.filter(comment => comment.parentId === action.postId)
+                selectedComments: sortByVoteScore(state.list.filter(comment => comment.parentId === action.postId))
             }
         case CREATE_COMMENT:
             return {
                 ...state,
-                list: [{...action.comment, key: (state.list.length - 1)}].concat(state.list || []),
-                selectedComments: [{...action.comment, key: (state.list.length - 1)}].concat(state.selectedComments || [])
+                list: sortByVoteScore(addToList(state.list, action.comment)),
+                selectedComments: sortByVoteScore(addToList(state.selectedComments, action.comment)),
             }
         case UPDATE_COMMENT:
             return {
                 ...state,
-                list: (state.list || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], []),
-                selectedComments: (state.selectedComments || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], []),
+                list: sortByVoteScore((state.list || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], [])),
+                selectedComments: sortByVoteScore((state.selectedComments || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], [])),
             }
         case DELETE_COMMENT:
             return {
                 ...state,
-                list: (state.list || []).filter(comment => comment.id !== action.comment.id),
-                selectedComments: (state.selectedComments || []).filter(comment => comment.id !== action.comment.id),
+                list: sortByVoteScore((state.list || []).filter(comment => comment.id !== action.comment.id)),
+                selectedComments: sortByVoteScore((state.selectedComments || []).filter(comment => comment.id !== action.comment.id)),
             }
         default:
             return state
