@@ -31,20 +31,6 @@ const getPostsAction = (posts, categoryName) => ({
   categoryName
 })
 
-// export const getPosts = ({ categoryName, sortByProps }) => async dispatch => {
-//   let posts = []
-
-//   if (categoryName)
-
-//   R.pipe(
-//     R.sortBy(R.prop('sortByProps')),
-//     R.prop('sort', sortBy(...sortByProps)),
-//     getPostsAction,
-//     dispatch
-//   )(posts)
-
-//   return dispatch(getPostsAction(posts.sort())
-// }
 export const selectPosts = (categoryName) => dispatch => (dispatch({
   type: types.SELECT_POSTS,
   categoryName

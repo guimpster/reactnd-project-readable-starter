@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { selectCategory, getAllPosts, getAllCategories } from '../actions'
+import { selectCategory, getAllPosts, getAllCategories, selectPost } from '../actions'
 import capitalize from 'capitalize'
 
 import { withStyles } from '@material-ui/core/styles';
@@ -47,12 +47,23 @@ class CategoriesHeader extends Component {
   handleClose = () => this.setState({ anchorEl: null })
 
   componentDidMount() {
-    const { selectCategory, getAllCategories, getAllPosts, match } = this.props
+    const { selectCategory, getAllCategories, getAllPosts, selectPost, match, history } = this.props
     const { categoryName = "all categories" } = match.params
 
     getAllCategories()
       .then(() => getAllPosts())
       .then(() => selectCategory(categoryName))
+
+    history.listen((location, done) => {
+      const [ , categoryName, postId] = location.pathname.split("/")
+      
+
+      console.log("Category Name: ", categoryName)
+      console.log("PostID: ", postId)
+
+      selectCategory(categoryName ? categoryName : "all categories")
+      selectPost(postId)
+    })
   }
 
   render() {
@@ -112,6 +123,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch) => ({
   selectCategory: (categoryName) => dispatch(selectCategory(categoryName)),
+  selectPost: postId => dispatch(selectPost(postId)),
   getAllCategories: () => dispatch(getAllCategories()),
   getAllPosts: () => dispatch(getAllPosts())
 })
