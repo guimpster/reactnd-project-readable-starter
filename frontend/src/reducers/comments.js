@@ -33,7 +33,7 @@ const comment = (state = initialState, action) => {
             return {
                 ...state,
                 list: (state.list || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], []),
-                selectedComments: (state.list || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], []),
+                selectedComments: (state.selectedComments || []).reduce((acc, val) => action.comment.id === val.id ? [...acc, {...action.comment, key: val.key }] : [...acc, val], []),
             }
         case DELETE_COMMENT:
             return {

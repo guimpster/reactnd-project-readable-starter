@@ -3,13 +3,13 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Route, Switch, Link } from 'react-router-dom'
 
-import { createPost, deletePost, updatePost, voteOnPost, selectPost, createComment, updateComment, getCommentsByPostId } from '../actions'
+import { createPost, deletePost, updatePost, orderPostsBy, voteOnPost, selectPost, createComment, updateComment, getCommentsByPostId } from '../actions'
 
 import PostCard from '../components/PostCard'
 import PostCardDetails from './PostCardDetails'
 import PostFormDialog from '../components/PostFormDialog'
 //import PostDetails from '../components/PostDetails'
-import OrderByMenu from '../components/OrderByMenu'
+import OrderByButton from '../components/OrderByButton'
 
 import Typography from '@material-ui/core/Typography';
 
@@ -66,7 +66,7 @@ class PostsView extends Component {
             selectedCategory, 
             vote, 
             removePost, 
-            sortPosts,
+            orderPostsBy,
             posts,
             selectPost,
         } = this.props
@@ -90,9 +90,9 @@ class PostsView extends Component {
                             <AddIcon/>
                         </Button>
         
-                        <OrderByMenu 
-                            sortBy={ [{name: "voteScore", text: "vote"}, {name: "timestamp", text: "date"}]} 
-                            toggleClickHandler={sortPosts}
+                        <OrderByButton 
+                            orderBy={{prop: "voteScore", text: "vote"}} 
+                            toggleClickHandler={orderPostsBy}
                         />
                     </div>
                 )}/>
@@ -174,10 +174,7 @@ const mapDispatchToProps = (dispatch) => ({
     createPost: post => dispatch(createPost(post)),
     removePost: postId => dispatch(deletePost(postId)),
     vote: ({ postId, option }) => dispatch(voteOnPost(postId, option)),
-    sortPosts: (param, direction) => {
-        console.log(param, direction)
-        //dispatch(getPostsByCategoryName())
-    },
+    orderPostsBy: params => dispatch(orderPostsBy(params)),
     updatePost: post => dispatch(updatePost(post)),
     selectPost: postId => dispatch(selectPost(postId)),
     getCommentsByPostId: () => dispatch(getCommentsByPostId()),

@@ -1,4 +1,3 @@
-//import * as R from 'ramda'
 import uid from 'uid'
 
 import * as types from '../constants/ActionTypes'
@@ -34,6 +33,12 @@ const getPostsAction = (posts, categoryName) => ({
 export const selectPosts = (categoryName) => dispatch => (dispatch({
   type: types.SELECT_POSTS,
   categoryName
+}))
+
+export const orderPostsBy = ({ orderBy, direction }) => dispatch => (dispatch({
+  type: types.ORDER_POSTS_BY,
+  orderBy,
+  direction
 }))
 
 export const getPostsByCategoryName = categoryName => dispatch =>

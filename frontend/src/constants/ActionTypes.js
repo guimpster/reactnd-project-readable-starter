@@ -1,6 +1,7 @@
 export const GET_CATEGORIES = 'GET_CATEGORIES'
 export const SELECT_CATEGORY = 'SELECT_CATEGORY'
 
+export const ORDER_POSTS_BY = 'ORDER_POSTS_BY'
 export const SELECT_POSTS = 'SELECT_POSTS'
 export const SELECT_POST = 'SELECT_POST'
 export const GET_POSTS = 'GET_POSTS'

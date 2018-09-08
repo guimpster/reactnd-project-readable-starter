@@ -56,10 +56,6 @@ class CategoriesHeader extends Component {
 
     history.listen((location, done) => {
       const [ , categoryName, postId] = location.pathname.split("/")
-      
-
-      console.log("Category Name: ", categoryName)
-      console.log("PostID: ", postId)
 
       selectCategory(categoryName ? categoryName : "all categories")
       selectPost(postId)

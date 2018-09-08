@@ -1,3 +1,5 @@
+import * as R from 'ramda'
+
 import {
     GET_POSTS,
     CREATE_POST,
@@ -6,7 +8,8 @@ import {
     SELECT_CATEGORY,
     SELECT_POST,
     CREATE_COMMENT,
-    DELETE_COMMENT
+    DELETE_COMMENT,
+    ORDER_POSTS_BY
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -15,6 +18,12 @@ const initialState = {
     selectedPost: {}
 }
 
+const sortBy = ({ orderBy, direction, list}) => {
+    const sortOrder =  R.equals('desc', direction) ?
+        R.descend(R.prop(orderBy)) : R.ascend(R.prop(orderBy));
+
+    return R.sortWith([sortOrder], list)
+}
 const post = (state = initialState, action) => {
     switch(action.type) {
         case GET_POSTS:
@@ -28,6 +37,13 @@ const post = (state = initialState, action) => {
                 selectedPosts: action.categoryName === "all categories" ? state.list.slice() :
                                     state.list.filter(post => post.category === action.categoryName)
 
+            }
+        case ORDER_POSTS_BY:
+            console.log({...action, list: state.list })
+            return {
+                ...state,
+                list: sortBy({...action, list: state.list }),
+                selectedPosts: sortBy({...action, list: state.selectedPosts }),
             }
         case SELECT_POST:
             return {
@@ -44,7 +60,7 @@ const post = (state = initialState, action) => {
             return {
                 ...state,
                 list: (state.list || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
-                selectedPosts: (state.list || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
+                selectedPosts: (state.selectedPosts || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
                 selectedPost: { ...action.post }
             }
         case CREATE_COMMENT:
