@@ -71,7 +71,7 @@ class PostCard extends React.Component {
             </div>
           }
           title={post.title}
-          subheader={`by ${post.author} \u00B7 ${moment(post.timestamp).fromNow()} \u00B7 ${post.commentCount} comments`}
+          subheader={`by ${post.author} \u00B7 ${moment(post.timestamp).fromNow()} \u00B7 ${post.commentCount} comment(s)`}
         />
         <CardContent>
           <Button  color="primary">

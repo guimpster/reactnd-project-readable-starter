@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, Link } from 'react-router-dom'
 
 import { createPost, deletePost, updatePost, voteOnPost, selectPost, createComment, updateComment, getCommentsByPostId } from '../actions'
 
@@ -10,6 +10,8 @@ import PostCardDetails from './PostCardDetails'
 import PostFormDialog from '../components/PostFormDialog'
 //import PostDetails from '../components/PostDetails'
 import OrderByMenu from '../components/OrderByMenu'
+
+import Typography from '@material-ui/core/Typography';
 
 import { withStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
@@ -20,6 +22,13 @@ const styles = theme => ({
       position: 'absolute',
       bottom: theme.spacing.unit * 2,
       right: theme.spacing.unit * 2,
+    },
+    link: {
+        marginLeft: 8,
+        marginTop: 14,
+        fontSize: 15,
+        textDecoration: 'none',
+        color: "primary"
     },
 })
 class PostsView extends Component {
@@ -66,10 +75,6 @@ class PostsView extends Component {
 
         return (
             <div style={ { height: 500, "overflowY": "auto" } }>
-
-                <Button variant="fab" onClick={this.addPost} className={classes.fab} color="primary">
-                    <AddIcon/>
-                </Button>
                 <PostFormDialog
                     selectedCategory={selectedCategory}
                     categories={categories}
@@ -79,14 +84,22 @@ class PostsView extends Component {
                     post={postForm}
                     title={postDialogTitle}/>
 
-                <OrderByMenu 
-                    sortBy={ [{name: "voteScore", text: "vote"}, {name: "timestamp", text: "date"}]} 
-                    toggleClickHandler={sortPosts}
-                />
+                <Route exact path="/:categoryName?" render={(props) => (
+                    <div>
+                        <Button variant="fab" onClick={this.addPost} className={classes.fab} color="primary">
+                            <AddIcon/>
+                        </Button>
+        
+                        <OrderByMenu 
+                            sortBy={ [{name: "voteScore", text: "vote"}, {name: "timestamp", text: "date"}]} 
+                            toggleClickHandler={sortPosts}
+                        />
+                    </div>
+                )}/>
 
                 <Switch>
                     {categories.map((category, idx) => (
-                        <Route key={idx} exact path={`/${category.path}`}> 
+                        <Route key={idx} exact path={`/${category.path}`} render={() => (
                             <div className="posts">
                                 {selectedPosts.map((post, idx) => (
                                     <PostCard 
@@ -98,7 +111,7 @@ class PostsView extends Component {
                                         selectPost={selectPost}/>
                                 ))}
                             </div>
-                        </Route>
+                        )}/>
                     ))}
 
                     {posts.map((post, idx) => (
@@ -106,17 +119,27 @@ class PostsView extends Component {
                             key={categories.length+idx} 
                             exact path={`/${post.category}/${post.id}`}
                             render={(props) => 
-                                <PostCardDetails
-                                    { ...props }
-                                    key={categories.length+idx}
-                                    post={post}
-                                    vote={vote}
-                                    removePost={removePost}
-                                    editPost={this.editPost}/>}
-                            >
-                            
-                        </Route>
+                                <div>
+                                    <Typography variant="caption" gutterBottom style={{marginTop: 8}}>
+                                        <Link className={classes.link} to={`/${post.category}`}>Back</Link>
+                                    </Typography>
+                                    
+                                    <PostCardDetails
+                                        { ...props }
+                                        key={categories.length+idx}
+                                        post={post}
+                                        vote={vote}
+                                        removePost={removePost}
+                                        editPost={this.editPost}/>
+                                </div>
+                            }/>
                     ))}
+
+                    <Route render={({ location }) => (
+                        <div>
+                            <Typography style={{ marginLeft: 10 }} variant="body2">Oops! 404 Resource not found in <code>{location.pathname}</code></Typography>
+                        </div>
+                    )}/>
                 </Switch>
                 <br/><br/><br/>
 

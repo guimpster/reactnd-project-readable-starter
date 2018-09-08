@@ -2,6 +2,7 @@ import React from 'react'
 import CategoriesHeader from './CategoriesHeader'
 import PostsView from './PostsView'
 
+import {Route} from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -15,7 +16,9 @@ const styles = theme => ({
 
 const App = ({ classes }) => (
   <div className={classes.root}>
-    <CategoriesHeader />
+    <Route path="/:categoryName?" render={(props) => (
+      <CategoriesHeader {...props}/>
+    )}/>
     <PostsView />
   </div>
 )

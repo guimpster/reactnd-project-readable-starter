@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 // import * as R from 'ramda'
 
 
-import { voteOnPost, selectPost, createComment, updateComment, getCommentsByPostId, updatePost, deletePost, voteOnComment, deleteComment } from '../actions'
+import { voteOnPost, selectPost, createComment, selectCategory, updateComment, getCommentsByPostId, updatePost, deletePost, voteOnComment, deleteComment } from '../actions'
 
 import CommentFormDialog from '../components/CommentFormDialog'
 
@@ -26,13 +26,14 @@ import { CardContent } from "@material-ui/core";
 
 const styles = theme => ({
   card: {
+    marginTop: 8,
     marginLeft: 8,
     marginRight: 8,
     marginBottom: 8
   },
   media: {
     height: 0,
-    paddingTop: "56.25%" // 16:9
+    paddingTop: "56.25%"
   },
   actions: {
     display: "flex"
@@ -82,6 +83,13 @@ class PostCardDetails extends Component {
   closeDialog = () => 
       this.setState({ commentForm: {}, openDialog: false })
 
+  removePost = postId => {
+    const { removePost, selectedPost, selectCategory, history } = this.props
+
+    removePost(postId)
+      .then(() => selectCategory(selectedPost.category))
+      .then(() => history.push(`/${selectedPost.category}`))
+  }
 
   addComment = () => {
       const { selectedPost } = this.props
@@ -93,7 +101,7 @@ class PostCardDetails extends Component {
       this.setState({ commentForm: comment, openDialog: true })
 
   render() {
-    const { classes, selectedPost, removePost, voteOnPost, selectedComments, voteOnComment, removeComment, editPost } = this.props
+    const { classes, selectedPost, voteOnPost, selectedComments, voteOnComment, removeComment, editPost } = this.props
     const { commentForm, openDialog } = this.state
 
     return (
@@ -108,7 +116,7 @@ class PostCardDetails extends Component {
             <div>
               <IconButton
                 aria-label="Remove"
-                onClick={() => removePost(selectedPost.id)}
+                onClick={() => this.removePost(selectedPost.id)}
               >
                 <DeleteIcon />
               </IconButton>
@@ -122,7 +130,7 @@ class PostCardDetails extends Component {
             <div>
               {`by ${selectedPost.author} \u00B7 ${moment(
                 selectedPost.timestamp
-              ).format("YY/DD/mm HH:MM:ss")} \u00B7 ${selectedPost.commentCount} comments \u00B7 `}
+              ).format("YY/DD/mm HH:MM:ss")} \u00B7 ${selectedPost.commentCount} comment(s) \u00B7 `}
               <IconButton
                 className={classes.smallIconButton}
                 color="secondary"
@@ -235,7 +243,8 @@ const mapDispatchToProps = (dispatch) => ({
   voteOnComment: ({ commentId, option }) => dispatch(voteOnComment(commentId, option)),
   removeComment: commentId => dispatch(deleteComment(commentId)),
   createComment: comment => dispatch(createComment(comment)),
-  updateComment: comment => dispatch(updateComment(comment))
+  updateComment: comment => dispatch(updateComment(comment)),
+  selectCategory: categoryName => dispatch(selectCategory(categoryName))
 })
 
 export default connect(

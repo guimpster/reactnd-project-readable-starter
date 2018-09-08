@@ -47,15 +47,16 @@ class CategoriesHeader extends Component {
   handleClose = () => this.setState({ anchorEl: null })
 
   componentDidMount() {
-    const { selectCategory, getAllCategories, getAllPosts } = this.props
+    const { selectCategory, getAllCategories, getAllPosts, match } = this.props
+    const { categoryName = "all categories" } = match.params
 
     getAllCategories()
       .then(() => getAllPosts())
-      .then(() => selectCategory("all categories"))
+      .then(() => selectCategory(categoryName))
   }
 
   render() {
-    const { selectCategory, categories, classes/*selectedCategory*/ } = this.props
+    const { selectCategory, categories, classes } = this.props
     const { anchorEl } = this.state;
 
     return (
@@ -73,7 +74,7 @@ class CategoriesHeader extends Component {
                 <Link 
                   key={category.key}
                   className={classes.link}
-                  to={category.path} 
+                  to={`/${category.path}`} 
                   onClick={() => selectCategory(category.name)}
                 >
                   <MenuItem
@@ -107,7 +108,6 @@ CategoriesHeader.propTypes = {
 
 const mapStateToProps = state => ({
   categories: state.categories.list,
-  selectedCategory: state.categories.selected
 })
 
 const mapDispatchToProps = (dispatch) => ({
