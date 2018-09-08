@@ -16,7 +16,8 @@ class PostFormDialog extends Component {
   handleSubmit = (e) => {
     const { submitHandler, closeDialog } = this.props
 
-    const post = { 
+    const post = {
+      id: R.path(['id', 'value'], this.form),
       author: R.path(['author', 'value'], this.form),
       category: R.path(['category', 'value'], this.form),
       title: R.path(['title', 'value'], this.form),
@@ -55,11 +56,16 @@ class PostFormDialog extends Component {
             autoComplete="off">
           <DialogTitle id="form-dialog-title">{title}</DialogTitle>
           <DialogContent>
+                <TextField
+                  name="id"
+                  type="hidden"
+                  defaultValue={post.id}
+                />
                 <If test={selectedCategory.name !== "all categories"}>
                   <TextField
                     name="category"
                     type="hidden"
-                    value={post.category}
+                    defaultValue={post.category}
                   />
                 </If>
                 <If test={selectedCategory.name === "all categories"}>
@@ -67,14 +73,16 @@ class PostFormDialog extends Component {
                     name="category"
                     select
                     label="Category"
-                    value={post.category}
+                    defaultValue={post.category}
                     autoFocus
                     margin="dense"
                     SelectProps={{
                       native: true,
-                    //   MenuProps: {
-                    //     className: classes.menu,
-                    //   },
+                      MenuProps: {
+                        className: {
+                          width: 200,
+                        },
+                      },
                     }}
                     fullWidth
                     helperText="Please select a category"
@@ -92,7 +100,7 @@ class PostFormDialog extends Component {
                   label="Title"
                   margin="dense"
                   required={true}
-                  value={post.title}
+                  defaultValue={post.title}
                   fullWidth
                 />
                 <TextField
@@ -100,7 +108,7 @@ class PostFormDialog extends Component {
                   label="Author"
                   margin="dense"
                   required={true}
-                  value={post.author}
+                  defaultValue={post.author}
                   fullWidth
                 />
                 <TextField
@@ -109,7 +117,7 @@ class PostFormDialog extends Component {
                   required={true}
                   multiline={true}
                   margin="dense"
-                  value={post.body}
+                  defaultValue={post.body}
                   fullWidth
                 />
             </DialogContent>

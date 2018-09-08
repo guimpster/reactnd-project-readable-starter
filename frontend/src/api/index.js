@@ -66,14 +66,14 @@ export const voteOnPost = (id, option) =>
         body: [STRING],
     }
 */
-export const updatePost = (id, option) =>
-    fetch(`${api}/posts/${id}`, {
+export const updatePost = post =>
+    fetch(`${api}/posts/${post.id}`, {
         method: 'PUT',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({...option})
+        body: JSON.stringify({...post})
     }).then(res => res.json())
 
 export const deletePost = id =>
@@ -118,14 +118,14 @@ export const voteOnComment = (id, option) =>
         body: [STRING],
     }
 */
-export const updateComment = (id, option) =>
-    fetch(`${api}/comments/${id}`, {
+export const updateComment = comment =>
+    fetch(`${api}/comments/${comment.id}`, {
         method: 'PUT',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({...option})
+        body: JSON.stringify({...comment})
     }).then(res => res.json())
 
 export const deleteComment = id =>

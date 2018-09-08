@@ -4,7 +4,9 @@ import {
     UPDATE_POST,
     DELETE_POST,
     SELECT_CATEGORY,
-    SELECT_POST
+    SELECT_POST,
+    CREATE_COMMENT,
+    DELETE_COMMENT
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -43,6 +45,17 @@ const post = (state = initialState, action) => {
                 ...state,
                 list: (state.list || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
                 selectedPosts: (state.list || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
+                selectedPost: { ...action.post }
+            }
+        case CREATE_COMMENT:
+            return {
+                ...state,
+                selectedPost: { ...state.selectedPost, commentCount: state.selectedPost.commentCount+1 }
+            }
+        case DELETE_COMMENT:
+            return {
+                ...state,
+                selectedPost: { ...state.selectedPost, commentCount: state.selectedPost.commentCount-1 }
             }
         case DELETE_POST:
             return {

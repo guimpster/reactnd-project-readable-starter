@@ -15,6 +15,7 @@ class CommentFormDialog extends Component {
     const { submitHandler, closeDialog } = this.props
 
     const comment = { 
+      id: R.path(['id', 'value'], this.form),
       parentId: R.path(['parentId', 'value'], this.form),
       author: R.path(['author', 'value'], this.form),
       body: R.path(['body', 'value'], this.form),
@@ -50,16 +51,21 @@ class CommentFormDialog extends Component {
           <DialogTitle id="form-dialog-title">{title}</DialogTitle>
           <DialogContent>
                 <TextField
+                  name="id"
+                  type="hidden"
+                  defaultValue={comment.id}
+                />
+                <TextField
                   name="parentId"
                   type="hidden"
-                  value={comment.parentId}
+                  defaultValue={comment.parentId}
                 />
                 <TextField
                   name="author"
                   label="Author"
                   margin="dense"
                   required={true}
-                  value={comment.author}
+                  defaultValue={comment.author}
                   fullWidth
                 />
                 <TextField
@@ -68,7 +74,7 @@ class CommentFormDialog extends Component {
                   required={true}
                   multiline={true}
                   margin="dense"
-                  value={comment.body}
+                  defaultValue={comment.body}
                   fullWidth
                 />
             </DialogContent>

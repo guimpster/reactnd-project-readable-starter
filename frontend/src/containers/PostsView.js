@@ -26,12 +26,11 @@ class PostsView extends Component {
     state = {
         postForm: {},
         openDialog: false,
+        postDialogTitle: ""
     }
 
     submitHandler = postForm => {
         const { createPost, updatePost } = this.props
-
-        debugger;
 
         postForm.id ? updatePost(postForm) : createPost(postForm)
     }
@@ -43,11 +42,11 @@ class PostsView extends Component {
     addPost = () => {
         const { selectedCategory } = this.props
 
-        this.setState({ postForm: { category: selectedCategory.name}, openDialog: true })
+        this.setState({ postForm: { category: selectedCategory.name}, openDialog: true, postDialogTitle: "Add Post" })
     }
 
     editPost = post =>
-        this.setState({ postForm: post, openDialog: true })
+        this.setState({ postForm: post, openDialog: true, postDialogTitle: "Edit Post" })
     
 
     render() {
@@ -63,7 +62,7 @@ class PostsView extends Component {
             selectPost,
         } = this.props
 
-        const { postForm, openDialog } = this.state
+        const { postForm, openDialog, postDialogTitle } = this.state
 
         return (
             <div style={ { height: 500, "overflowY": "auto" } }>
@@ -77,7 +76,8 @@ class PostsView extends Component {
                     submitHandler={this.submitHandler}
                     closeDialog={this.closeDialog}
                     openDialog={openDialog}
-                    post={postForm}/>
+                    post={postForm}
+                    title={postDialogTitle}/>
 
                 <OrderByMenu 
                     sortBy={ [{name: "voteScore", text: "vote"}, {name: "timestamp", text: "date"}]} 

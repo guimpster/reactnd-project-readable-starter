@@ -61,9 +61,14 @@ class PostCard extends React.Component {
             </Avatar>
           }
           action={
-            <IconButton aria-label="Remove" onClick={() => removePost(post.id)}>
-              <DeleteIcon />
-            </IconButton>
+            <div>
+              <IconButton aria-label="Remove" onClick={() => removePost(post.id)}>
+                <DeleteIcon />
+              </IconButton>
+              <IconButton aria-label="Edit" onClick={() => editPost(post)}>
+                <EditIcon />
+              </IconButton>
+            </div>
           }
           title={post.title}
           subheader={`by ${post.author} \u00B7 ${moment(post.timestamp).fromNow()} \u00B7 ${post.commentCount} comments`}
@@ -79,9 +84,6 @@ class PostCard extends React.Component {
           </IconButton> {post.voteScore}
           <IconButton color="primary" aria-label="Dislike" onClick={() => vote({ postId: post.id, option: "downVote" })}>
             <ThumbDown />
-          </IconButton>
-          <IconButton className={classes.edition} aria-label="Edit" onClick={() => editPost(post)}>
-            <EditIcon />
           </IconButton>
         </CardActions>
       </Card>
