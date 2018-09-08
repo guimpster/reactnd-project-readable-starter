@@ -11,7 +11,7 @@ import PostFormModal from '../components/PostFormModal'
 //import PostDetails from '../components/PostDetails'
 //import OrderButton from '../components/OrderButton'
 
-class PostContainer extends Component {
+class PostsBody extends Component {
 
     savePost = (post) => this.props.createPost(post)
 
@@ -62,7 +62,7 @@ class PostContainer extends Component {
     }
 }
 
-PostContainer.propTypes = {
+PostsBody.propTypes = {
     posts: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string.isRequired,
       timestamp: PropTypes.number.isRequired,
@@ -91,4 +91,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(PostContainer)
+)(PostsBody)
