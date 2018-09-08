@@ -73,23 +73,16 @@ const getPostAction = post => ({
 export const getPostById = id => dispatch =>
   api.getPost(id).then(post => dispatch(getPostAction(post)))
 
-const voteOnPostAction = (id, option) => ({
-  type: types.VOTE_ON_POST,
-  post: { id },
-  option
+const updatePostAction = post => ({
+  type: types.UPDATE_POST,
+  post
 })
 
 export const voteOnPost = (id, option) => dispatch =>
-  api.voteOnPost(id, option).then(res => dispatch(voteOnPostAction(id, option)))
-
-const updatePostAction = (id, option) => ({
-  type: types.UPDATE_POST,
-  post: { id },
-  option
-})
+  api.voteOnPost(id, option).then(post => dispatch(updatePostAction(post)))
 
 export const updatePost = (id, option) => dispatch =>
-  api.updatePost(id, option).then(res => dispatch(updatePostAction(id, option)))
+  api.updatePost(id, option).then(post => dispatch(updatePostAction(post)))
 
 const deletePostAction = id => ({
   type: types.DELETE_POST,
@@ -128,23 +121,17 @@ const getCommentAction = comment => ({
 export const getCommentById = id => dispatch => 
   api.getComment(id).then(comment => dispatch(getCommentAction(comment)))
 
-const voteOnCommentAction = (id, option) => ({
-  type: types.VOTE_ON_COMMENT,
-  comment: { id },
-  option
-})
-
-export const voteOnComment = (id, option) => dispatch =>
-  api.voteOnComment(id, option).then(res => dispatch(voteOnCommentAction(id, option)))
-
 const updateCommentAction = (id, option) => ({
   type: types.UPDATE_COMMENT,
   comment: { id },
   option
 })
 
+export const voteOnComment = (id, option) => dispatch =>
+  api.voteOnComment(id, option).then(comment => dispatch(updateCommentAction(comment)))
+
 export const updateComment = (id, option) => dispatch =>
-  api.updateComment(id, option).then(res => dispatch(updateCommentAction(id, option)))
+  api.updateComment(id, option).then(comment => dispatch(updateCommentAction(comment)))
 
 const deleteCommentAction = id => ({
   type: types.DELETE_COMMENT,

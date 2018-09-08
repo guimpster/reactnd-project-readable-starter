@@ -3,29 +3,23 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
-import { createPost, deletePost, getPostsByCategoryName } from '../actions'
+import { createPost, deletePost, getPostsByCategoryName, voteOnPost } from '../actions'
 
-import PostItem from '../components/PostItem'
-import PostsList from '../components/PostsList'
+import PostCard from '../components/PostCard'
 import PostFormModal from '../components/PostFormModal'
 //import PostDetails from '../components/PostDetails'
 //import OrderButton from '../components/OrderButton'
 
 class PostsBody extends Component {
-
-    savePost = (post) => this.props.createPost(post)
-
-    removePost = (postId) => this.props.deletePost(postId)
-
     render() {
-        const { categories, selectedPosts, selectedCategory } = this.props
+        const { categories, selectedPosts, selectedCategory, vote, createPost, removePost } = this.props
 
         return (
-            <div className="posts">
+            <div style={ { height: 500, "overflow-y": "auto" } }>
                 <PostFormModal
                     selectedCategory={selectedCategory}
                     categories={categories}
-                    submitHandler={this.savePost}
+                    submitHandler={createPost}
                     post={{ category: selectedCategory.name}}
                     btnText="Add New Post"
                     title="Add New Post"/>
@@ -33,22 +27,23 @@ class PostsBody extends Component {
                 Ordenar por 
                     {/* <OrderButton prop="voteScore" text="Votes" onClick={getPosts}/> 
                     <OrderButton prop="timestamp" text="Data" onClick={getPosts}/> */}
-                <hr></hr>
 
                 <Switch>
                     {categories.map((category, idx) => (
                         <Route key={idx} path={`/${category.path}`}> 
                             <div className="posts">
-                                
-                                <PostsList>
-                                    {selectedPosts.map((post, idx) => (
-                                        <PostItem key={idx} post={post} removePost={this.removePost}/>
-                                    ))}
-                                </PostsList>
+                                {selectedPosts.map((post, idx) => (
+                                    <PostCard 
+                                        key={idx} 
+                                        post={post} 
+                                        vote={vote}
+                                        removePost={removePost}/>
+                                ))}
                             </div>
                         </Route>
                     ))}
                 </Switch>
+                <br/><br/><br/>
 
                 {/* <Route name="/:categoryPath/:postId">
                     <div className="post-details">
@@ -84,7 +79,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch) => ({
     createPost: post => dispatch(createPost(post)),
-    deletePost: postId => dispatch(deletePost(postId)),
+    removePost: postId => dispatch(deletePost(postId)),
+    vote: ({ postId, option }) => dispatch(voteOnPost(postId, option)),
     getPostsByCategoryName: categoryName => dispatch(getPostsByCategoryName(categoryName))
 })
 

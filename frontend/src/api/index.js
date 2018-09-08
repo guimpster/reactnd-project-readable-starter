@@ -57,7 +57,7 @@ export const voteOnPost = (id, option) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(option)
+        body: JSON.stringify({option})
     }).then(res => res.json())
 
 /*
@@ -73,7 +73,7 @@ export const updatePost = (id, option) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(option)
+        body: JSON.stringify({...option})
     }).then(res => res.json())
 
 export const deletePost = id =>
@@ -110,7 +110,7 @@ export const voteOnComment = (id, option) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(option)
+        body: JSON.stringify({option})
     }).then(res => res.json())
 
 /*
@@ -126,7 +126,7 @@ export const updateComment = (id, option) =>
             ...headers,
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(option)
+        body: JSON.stringify({...option})
     }).then(res => res.json())
 
 export const deleteComment = id =>

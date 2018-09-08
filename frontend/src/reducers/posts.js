@@ -33,7 +33,11 @@ const post = (state = initialState, action) => {
                 selectedPosts: [{...action.post, key: (state.list.length - 1)}].concat(state.selectedPosts || [])
             }
         case UPDATE_POST:
-            return state
+            return {
+                ...state,
+                list: (state.list || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
+                selectedPosts: (state.list || []).reduce((acc, val) => action.post.id === val.id ? [...acc, {...action.post, key: val.key }] : [...acc, val], []),
+            }
         case DELETE_POST:
             return {
                 ...state,
