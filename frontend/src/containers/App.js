@@ -1,6 +1,6 @@
 import React from 'react'
 import CategoriesHeader from './CategoriesHeader'
-import PostsBody from './PostsBody'
+import PostsView from './PostsView'
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,7 +16,7 @@ const styles = theme => ({
 const App = ({ classes }) => (
   <div className={classes.root}>
     <CategoriesHeader />
-    <PostsBody />
+    <PostsView />
   </div>
 )
 

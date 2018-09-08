@@ -1,23 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import capitalize from 'capitalize'
-import { withStyles } from '@material-ui/core/styles'
-import classnames from 'classnames'
 import moment from 'moment'
+import { Link } from 'react-router-dom'
+
+import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
 import CardActions from '@material-ui/core/CardActions'
-import Collapse from '@material-ui/core/Collapse'
 import Avatar from '@material-ui/core/Avatar'
 import IconButton from '@material-ui/core/IconButton'
-import Typography from '@material-ui/core/Typography'
 import red from '@material-ui/core/colors/red'
 import ThumbUp from '@material-ui/icons/ThumbUp'
 import ThumbDown from '@material-ui/icons/ThumbDown'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
+import { CardContent } from '@material-ui/core';
 
 
 const styles = theme => ({
@@ -40,6 +39,9 @@ const styles = theme => ({
   avatar: {
     backgroundColor: red[500],
   },
+  link: {
+    textDecoration: 'none'
+  }
 });
 
 class PostCard extends React.Component {
@@ -48,7 +50,7 @@ class PostCard extends React.Component {
   handleExpandClick = () => this.setState(state => ({ expanded: !state.expanded }));
 
   render() {
-    const { classes, post, removePost, vote, editPost } = this.props;
+    const { classes, post, removePost, vote, editPost, selectPost } = this.props;
 
     return (
       <Card className={classes.card}>
@@ -64,8 +66,13 @@ class PostCard extends React.Component {
             </IconButton>
           }
           title={post.title}
-          subheader={`by ${post.author} \u00B7 ${moment(post.timestamp).fromNow()} \u00B7 99 comments`}
+          subheader={`by ${post.author} \u00B7 ${moment(post.timestamp).fromNow()} \u00B7 ${post.commentCount} comments`}
         />
+        <CardContent>
+          <Button  color="primary">
+            <Link className={classes.link} to={`/${post.category}/${post.id}`} onClick={() => selectPost(post.id)}>View Details</Link>
+          </Button>
+        </CardContent>
         <CardActions className={classes.actions} disableActionSpacing>
           <IconButton color="secondary" aria-label="Like" onClick={() => vote({ postId: post.id, option: "upVote" })}>
             <ThumbUp /> 
@@ -73,7 +80,7 @@ class PostCard extends React.Component {
           <IconButton color="primary" aria-label="Dislike" onClick={() => vote({ postId: post.id, option: "downVote" })}>
             <ThumbDown />
           </IconButton>
-          <IconButton className={classes.edition} aria-label="Edit" onClick={() => editPost(post.id)}>
+          <IconButton className={classes.edition} aria-label="Edit" onClick={() => editPost(post)}>
             <EditIcon />
           </IconButton>
         </CardActions>
@@ -81,15 +88,6 @@ class PostCard extends React.Component {
     )
   }
 }
-
-// const PostItem = ({ post, removePost }) => (
-//   <div style={{ marginBottom: 20 }}>
-//     Post: {post.title}
-//     <button className='icon-btn' onClick={() => removePost(post.id)}>
-//         Remove Post
-//     </button>
-//   </div>
-// )
 
 PostCard.propTypes = {
   post: PropTypes.shape({

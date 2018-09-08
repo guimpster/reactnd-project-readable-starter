@@ -3,7 +3,8 @@ import {
     CREATE_POST,
     UPDATE_POST,
     DELETE_POST,
-    SELECT_CATEGORY
+    SELECT_CATEGORY,
+    SELECT_POST
 } from '../constants/ActionTypes'
 
 const initialState = {
@@ -25,6 +26,11 @@ const post = (state = initialState, action) => {
                 selectedPosts: action.categoryName === "all categories" ? state.list.slice() :
                                     state.list.filter(post => post.category === action.categoryName)
 
+            }
+        case SELECT_POST:
+            return {
+                ...state,
+                selectedPost: (state.list || []).reduce((acc, val) => action.postId === val.id ? val : acc, {})
             }
         case CREATE_POST:
             return {

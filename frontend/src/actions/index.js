@@ -92,6 +92,11 @@ const deletePostAction = id => ({
 export const deletePost = id => dispatch =>
   api.deletePost(id).then(res => dispatch(deletePostAction(id)))
 
+export const selectPost = postId => dispatch => (dispatch({
+    type: types.SELECT_POST,
+    postId
+}))
+
 //
 // Comments actions
 //
@@ -110,7 +115,7 @@ const createCommentAction = comment => ({
 })
 
 export const createComment = comment => dispatch => 
-  api.createComment(comment.parentId, comment).then(newComment => dispatch(createCommentAction(newComment)))
+  api.createComment({...comment, id: uid(), timestamp: Date.now()}).then(newComment => dispatch(createCommentAction(newComment)))
 
 
 const getCommentAction = comment => ({

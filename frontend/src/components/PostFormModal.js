@@ -189,7 +189,4 @@ SimpleModal.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// We need an intermediary variable for handling the recursive nesting.
-const PostFormModal = withStyles(styles)(SimpleModal);
-
-export default PostFormModal;
+export default withStyles(styles)(SimpleModal);
