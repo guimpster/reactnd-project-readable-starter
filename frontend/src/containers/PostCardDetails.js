@@ -1,17 +1,24 @@
 import React, { Component } from "react";
-// import PropTypes from "prop-types";
-// import capitalize from "capitalize";
 import moment from "moment";
-import { connect } from 'react-redux'
-// import * as R from 'ramda'
+import { connect } from "react-redux";
 
+import {
+  voteOnPost,
+  selectPost,
+  createComment,
+  selectCategory,
+  updateComment,
+  getCommentsByPostId,
+  updatePost,
+  deletePost,
+  voteOnComment,
+  deleteComment
+} from "../actions";
 
-import { voteOnPost, selectPost, createComment, selectCategory, updateComment, getCommentsByPostId, updatePost, deletePost, voteOnComment, deleteComment } from '../actions'
+import CommentFormDialog from "../components/CommentFormDialog";
 
-import CommentFormDialog from '../components/CommentFormDialog'
-
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -46,9 +53,9 @@ const styles = theme => ({
     backgroundColor: red[500]
   },
   fab: {
-    position: 'absolute',
+    position: "absolute",
     bottom: theme.spacing.unit * 2,
-    right: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2
   },
   smallIconButton: {
     width: 25,
@@ -65,44 +72,54 @@ const styles = theme => ({
 class PostCardDetails extends Component {
   state = {
     commentForm: {},
-    openDialog: false,
-  }
+    openDialog: false
+  };
 
   componentDidMount() {
-    const { getCommentsByPostId, selectPost, post } = this.props
+    const { getCommentsByPostId, selectPost, post } = this.props;
 
-    getCommentsByPostId(post.id).then(() => selectPost(post.id))
+    getCommentsByPostId(post.id).then(() => selectPost(post.id));
   }
 
   submitHandler = commentForm => {
-    const { createComment, updateComment } = this.props
+    const { createComment, updateComment } = this.props;
 
     commentForm.id ? updateComment(commentForm) : createComment(commentForm);
-  }
+  };
 
-  closeDialog = () => 
-      this.setState({ commentForm: {}, openDialog: false })
+  closeDialog = () => this.setState({ commentForm: {}, openDialog: false });
 
   removePost = postId => {
-    const { removePost, selectedPost, selectCategory, history } = this.props
+    const { removePost, selectedPost, selectCategory, history } = this.props;
 
     removePost(postId)
       .then(() => selectCategory(selectedPost.category))
-      .then(() => history.push(`/${selectedPost.category}`))
-  }
+      .then(() => history.push(`/${selectedPost.category}`));
+  };
 
   addComment = () => {
-      const { selectedPost } = this.props
+    const { selectedPost } = this.props;
 
-      this.setState({ commentForm: { parentId: selectedPost.id }, openDialog: true })
-  }
+    this.setState({
+      commentForm: { parentId: selectedPost.id },
+      openDialog: true
+    });
+  };
 
   editComment = comment =>
-      this.setState({ commentForm: comment, openDialog: true })
+    this.setState({ commentForm: comment, openDialog: true });
 
   render() {
-    const { classes, selectedPost, voteOnPost, selectedComments, voteOnComment, removeComment, editPost } = this.props
-    const { commentForm, openDialog } = this.state
+    const {
+      classes,
+      selectedPost,
+      voteOnPost,
+      selectedComments,
+      voteOnComment,
+      removeComment,
+      editPost
+    } = this.props;
+    const { commentForm, openDialog } = this.state;
 
     return (
       <Card className={classes.card}>
@@ -120,7 +137,10 @@ class PostCardDetails extends Component {
               >
                 <DeleteIcon />
               </IconButton>
-              <IconButton aria-label="Edit" onClick={() => editPost(selectedPost)}>
+              <IconButton
+                aria-label="Edit"
+                onClick={() => editPost(selectedPost)}
+              >
                 <EditIcon />
               </IconButton>
             </div>
@@ -130,23 +150,29 @@ class PostCardDetails extends Component {
             <div>
               {`by ${selectedPost.author} \u00B7 ${moment(
                 selectedPost.timestamp
-              ).format("YY/DD/mm HH:MM:ss")} \u00B7 ${selectedPost.commentCount} comment(s) \u00B7 `}
+              ).format("YY/DD/mm HH:MM:ss")} \u00B7 ${
+                selectedPost.commentCount
+              } comment(s) \u00B7 `}
               <IconButton
                 className={classes.smallIconButton}
                 color="secondary"
                 aria-label="Like"
-                onClick={() => voteOnPost({ postId: selectedPost.id, option: "upVote" })}
+                onClick={() =>
+                  voteOnPost({ postId: selectedPost.id, option: "upVote" })
+                }
               >
-                <ThumbUp className={classes.smallIcon}/>
+                <ThumbUp className={classes.smallIcon} />
               </IconButton>
               {selectedPost.voteScore}
               <IconButton
                 className={classes.smallIconButton}
                 color="primary"
                 aria-label="Dislike"
-                onClick={() => voteOnPost({ postId: selectedPost.id, option: "downVote" })}
+                onClick={() =>
+                  voteOnPost({ postId: selectedPost.id, option: "downVote" })
+                }
               >
-                <ThumbDown className={classes.smallIcon}/>
+                <ThumbDown className={classes.smallIcon} />
               </IconButton>
             </div>
           }
@@ -156,98 +182,92 @@ class PostCardDetails extends Component {
           <Typography variant="caption" gutterBottom>
             Comments
           </Typography>
-        {selectedComments.map((comment, idx) => (
-          <div key={idx}>
-            <Typography variant="body1" gutterBottom>
-              {comment.body}
-            </Typography>
-            <Typography variant="caption" gutterBottom>
-              {`by ${comment.author} \u00B7 ${moment(
-                comment.timestamp
-              ).format("YY/DD/mm HH:MM:ss")} \u00B7 `}
-              <IconButton
-                className={classes.smallIconButton}
-                aria-label="Like"
-                onClick={() => voteOnComment({ commentId: comment.id, option: "upVote" })}
-              >
-                <ThumbUp className={classes.smallIcon}/>
-              </IconButton>{" "}
-              {comment.voteScore}
-              <IconButton
-                className={classes.smallIconButton}
-                aria-label="Dislike"
-                onClick={() => voteOnComment({ commentId: comment.id, option: "downVote" })}
-              >
-                <ThumbDown className={classes.smallIcon}/>
-              </IconButton>
-              {"\u00B7"}
-              <IconButton
-                className={classes.smallIconButton}
-                aria-label="Remove"
-                onClick={() => removeComment(comment.id)}
-              >
-                <DeleteIcon className={classes.smallIcon}/>
-              </IconButton>
-              <IconButton className={classes.smallIconButton} aria-label="Edit" onClick={() => this.editComment(comment)}>
-                <EditIcon className={classes.smallIcon}/>
-              </IconButton>
-            </Typography>
-          </div>
-        ))}
+          {selectedComments.map((comment, idx) => (
+            <div key={idx}>
+              <Typography variant="body1" gutterBottom>
+                {comment.body}
+              </Typography>
+              <Typography variant="caption" gutterBottom>
+                {`by ${comment.author} \u00B7 ${moment(
+                  comment.timestamp
+                ).format("YY/DD/mm HH:MM:ss")} \u00B7 `}
+                <IconButton
+                  className={classes.smallIconButton}
+                  aria-label="Like"
+                  onClick={() =>
+                    voteOnComment({ commentId: comment.id, option: "upVote" })
+                  }
+                >
+                  <ThumbUp className={classes.smallIcon} />
+                </IconButton>{" "}
+                {comment.voteScore}
+                <IconButton
+                  className={classes.smallIconButton}
+                  aria-label="Dislike"
+                  onClick={() =>
+                    voteOnComment({ commentId: comment.id, option: "downVote" })
+                  }
+                >
+                  <ThumbDown className={classes.smallIcon} />
+                </IconButton>
+                {"\u00B7"}
+                <IconButton
+                  className={classes.smallIconButton}
+                  aria-label="Remove"
+                  onClick={() => removeComment(comment.id)}
+                >
+                  <DeleteIcon className={classes.smallIcon} />
+                </IconButton>
+                <IconButton
+                  className={classes.smallIconButton}
+                  aria-label="Edit"
+                  onClick={() => this.editComment(comment)}
+                >
+                  <EditIcon className={classes.smallIcon} />
+                </IconButton>
+              </Typography>
+            </div>
+          ))}
         </CardContent>
-        
+
         <CardContent>
           <Button onClick={this.addComment} color="primary">
-              Add Comment
+            Add Comment
           </Button>
           <CommentFormDialog
-              title="Comment"
-              submitHandler={this.submitHandler}
-              closeDialog={this.closeDialog}
-              openDialog={openDialog}
-              comment={commentForm}/>
+            title="Comment"
+            submitHandler={this.submitHandler}
+            closeDialog={this.closeDialog}
+            openDialog={openDialog}
+            comment={commentForm}
+          />
         </CardContent>
       </Card>
     );
   }
 }
 
-// PostCard.propTypes = {
-//   post: PropTypes.shape({
-//     key: PropTypes.number.isRequired,
-//     author: PropTypes.string.isRequired,
-//     body: PropTypes.string.isRequired,
-//     category: PropTypes.string.isRequired,
-//     commentCount: PropTypes.number.isRequired,
-//     deleted: PropTypes.bool.isRequired,
-//     id: PropTypes.string.isRequired,
-//     timestamp: PropTypes.number.isRequired,
-//     title: PropTypes.string.isRequired,
-//     voteScore: PropTypes.number.isRequired
-//   }).isRequired
-// };
-
-
 const mapStateToProps = state => ({
   selectedCategory: state.categories.selectedCategory,
   selectedPost: state.posts.selectedPost,
   selectedComments: state.comments.selectedComments
-})
+});
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   voteOnPost: ({ postId, option }) => dispatch(voteOnPost(postId, option)),
   selectPost: postId => dispatch(selectPost(postId)),
   updatePost: post => dispatch(updatePost(post)),
   removePost: postId => dispatch(deletePost(postId)),
   getCommentsByPostId: postId => dispatch(getCommentsByPostId(postId)),
-  voteOnComment: ({ commentId, option }) => dispatch(voteOnComment(commentId, option)),
+  voteOnComment: ({ commentId, option }) =>
+    dispatch(voteOnComment(commentId, option)),
   removeComment: commentId => dispatch(deleteComment(commentId)),
   createComment: comment => dispatch(createComment(comment)),
   updateComment: comment => dispatch(updateComment(comment)),
   selectCategory: categoryName => dispatch(selectCategory(categoryName))
-})
+});
 
 export default connect(
-mapStateToProps,
-mapDispatchToProps
-)(withStyles(styles)(PostCardDetails))
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(PostCardDetails));
